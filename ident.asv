@@ -7,17 +7,17 @@ funct2 = 7;
 ant1 = 20;
 ant2 = 30;
 
-AZ  = [0 0 1 0 0 0 1]; % BPSK - 0011001
-BAZ = [1 1 1 0 0 0 1]; % BPSK - 1001001
-EL  = [1 0 0 0 0 0 1]; % BPSK - 1100001
+%https://www.mathworks.com/matlabcentral/answers/181168-how-to-convert-integer-array-to-one-value
+
+
 
 bpsk(ant1:ant2);
 validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});
 antenna = polyval(bpsk, 10);    
-        
-bpsk(1:ant2);
+
+bpsk(funct1:funct2);
 validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});
-antenna = polyval(bpsk, 10);           
+funct = polyval(bpsk, 10);           
         
 end
 

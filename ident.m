@@ -8,6 +8,7 @@ ant1 = 20;
 ant2 = 30;
 
 %https://www.mathworks.com/matlabcentral/answers/181168-how-to-convert-integer-array-to-one-value
+
 bpsk(ant1:ant2);
 validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});
 antenna = polyval(bpsk, 10);    

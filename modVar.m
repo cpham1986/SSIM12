@@ -1,16 +1,10 @@
-function modVar(ID, ANT)
+function [thetaR, thetaBW, thetaMIN, thetaMAX, A] = modVar(ID, ANT)
 %MODFUNC Summary of this function goes here
 %   Detailed explanation goes here
 % Find out their function ID and replace for a case function
 AZ  = 0010001; % BPSK - 0011001
 BAZ = 1110001; % BPSK - 1001001
 EL  = 1000001; % BPSK - 1100001
-
-dpskrate = 156250;
-
-omega = 2*pi*dpskrate;
-
-
 
 switch ID
     case AZ
