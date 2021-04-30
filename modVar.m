@@ -5,7 +5,10 @@ function modVar(ID, ANT)
 AZ  = 0010001; % BPSK - 0011001
 BAZ = 1110001; % BPSK - 1001001
 EL  = 1000001; % BPSK - 1100001
-omega = 1;
+
+dpskrate = 156250;
+
+omega = 2*pi*dpskrate;
 
 
 
