@@ -1,0 +1,23 @@
+function [funct, antenna] = ident(bpsk)
+%IDENT Summary of this function goes here
+%   Detailed explanation goes here
+
+funct1 = 0;
+funct2 = 7;
+ant1 = 20;
+ant2 = 30;
+
+AZ  = [0 0 1 0 0 0 1]; % BPSK - 0011001
+BAZ = [1 1 1 0 0 0 1]; % BPSK - 1001001
+EL  = [1 0 0 0 0 0 1]; % BPSK - 1100001
+
+bpsk(ant1:ant2);
+validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});
+antenna = polyval(bpsk, 10);    
+        
+bpsk(1:ant2);
+validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});
+antenna = polyval(bpsk, 10);           
+        
+end
+
