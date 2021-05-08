@@ -1,6 +1,7 @@
-function dpsk = bpskdpsk(bpsk)
+% function: converts an array from BPSK to DPSK
 % input: bpsk - array of BPSK data from TCU
 % output: dpsk - converted BPSK array to DPSK
+function dpsk = bpskdpsk(bpsk)
 
 dpsk = zeros(1,length(bpsk)); % allocates memory for the new array
 prevVal = 0; % holds value of previous bit

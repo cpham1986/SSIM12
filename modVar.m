@@ -1,3 +1,6 @@
+% function: creates variables for the sinc function
+% input: function ID and antenna
+% output: several different thetas and A(t)
 function [thetaR, thetaBW, thetaMIN, thetaMAX, A] = modVar(ID, ANT)
 %MODFUNC Summary of this function goes here
 %   Detailed explanation goes here
@@ -46,4 +49,9 @@ if(ID ~= EL)
 end
 
 end
+
+
+
+
+%hkjhkjh
 
