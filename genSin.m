@@ -1,3 +1,6 @@
+% function:
+% input: bpsk - the input from TCU
+% output: the sinc output for SSIM (may be arbitrary)
 function v = genSin(bpsk)
 %GENSIN Summary of this function goes here
 %   Detailed explanation goes here

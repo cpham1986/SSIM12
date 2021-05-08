@@ -1,4 +1,8 @@
-%bspk is the 2d array with all the data
+% function: identifies the function and antenna of the bpsk
+% input: bpsk - the data array from TCU
+% output: [funct, antenna] - kind of up in the air right now, might be an
+% array with all functions and antennas for the whole 815ms signal or just
+% 1 at a time
 function [funct, antenna] = ident(bpsk)
 %IDENT Summary of this function goes here
 %   Detailed explanation goes here
