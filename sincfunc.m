@@ -7,14 +7,14 @@ BAZ = [1 1 1 0 0 0 1]; % BPSK - 1001001 DPSK - 1110001
 EL  = [1 0 0 0 0 0 1]; % BPSK - 1100001 DPSK - 1000001
 
 
-phaseShift
+phaseShift = 0;
 
-T 
+T = 0;
 
-thetaT
+thetaT = 0;
 
 % AmpT is the amplitude constant from the TCU
-AmpT
+AmpT = 0;
 
 % Sinc function
 %v(t) = AmpT * ((sin(pi*((thetaT-thetaR)/(1.15*thetaBW))))./(pi*((thetaT-thetaR)/(1.15*thetaBW)))).*sin(omega*T+phaseShift);
