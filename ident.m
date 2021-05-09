@@ -3,7 +3,7 @@
 % output: [funct, antenna] - kind of up in the air right now, might be an
 % array with all functions and antennas for the whole 815ms signal or just
 % 1 at a time
-function [funct, antenna] = ident(bpsk)
+function [funct, antenna] = ident(signal)
 %IDENT Summary of this function goes here
 %   Detailed explanation goes here
 

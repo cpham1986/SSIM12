@@ -1,7 +1,7 @@
 % function:
 % input: bpsk - the input from TCU
 % output: the sinc output for SSIM (may be arbitrary)
-function v = genSin(bpsk)
+function v = genSin(data)
 %GENSIN Summary of this function goes here
 %   Detailed explanation goes here
 % CMPE 349 - Project
@@ -12,7 +12,7 @@ AZ  = [0 0 1 0 0 0 1]; % BPSK - 0011001 DPSK - 0010001
 BAZ = [1 1 1 0 0 0 1]; % BPSK - 1001001 DPSK - 1110001
 EL  = [1 0 0 0 0 0 1]; % BPSK - 1100001 DPSK - 1000001
 
-[funct, antenna] = ident(bpsk);
+[funct, antenna] = ident(data);
 
 
 [thetaR, thetaBW, thetaMIN, thetaMAX, AmpT] = modVar(funct, antenna)
