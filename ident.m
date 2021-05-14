@@ -29,12 +29,12 @@ if antBit == length(signal)
     antBit = find(signal(:,8)==1, 1,'last');
 end
 
-antArray = [];
-antArray.append(signal(antBit, 5));
-antArray.append(signal(antBit, 6));
-antArray.append(signal(antBit, 7));
+antArray = [0 0 0];
+antArray(1) = signal(antBit, 5);
+antArray(2) = signal(antBit, 6);
+antArray(3) = signal(antBit, 7);
 validateattributes(antArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
-antenna = polyval(antArray, 10);    
+antenna = polyval(antArray, 10) 
   
 %turns an array into an integer
 % bpsk(funct1:funct2);

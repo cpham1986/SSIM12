@@ -15,7 +15,7 @@ for i = 1:length(testArr)
         index = i-1;
         %should grab all columns
         data2 = data(prevIndex:index, :);
-        time = prevIndex:index;
+        time = (prevIndex:index)*(10^-6);
         plotOutput(time, data2);
         prevIndex = index;
         

@@ -58,21 +58,21 @@ end
 
 if(ID ~= EL)
    switch ANT 
-       case 0
+       case 000
            A = 1;
-       case 1
+       case 001
            A = 0.5;
-       case 2
+       case 010
            A = 0.25;
-       case 3
+       case 011
            A = 0.125;
-       case 4
+       case 100
            A = -1; %supposed to be unused
-       case 5
+       case 101
            A = 10;
-       case 6
+       case 110
            A = 0;
-       case 7
+       case 111
            A = 0;
    end
 end
