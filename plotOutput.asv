@@ -1,0 +1,46 @@
+% function: plots the output for the SSIM
+% input: index and voltage (the ssim output)
+
+% possibly an arbitrary function
+function plotOutput(T, data)
+%PLOTOUTPUT Summary of this function goes here
+%   Detailed explanation goes here
+
+sBeam = data(:,4)==0;
+
+
+
+prevIndex = 1;
+for i = 1:length(testArr)
+    
+    switch(d)
+        %plots the preamble
+        case 1
+       
+            plot(T(prevIndex:i-1),data(prevIndex:i-1, :));
+            prevIndex = i-1;
+            break;
+            
+        case 3
+            [funct, antenna] = ident(data);
+            [thetaR, thetaBW, thetaMIN, thetaMAX, AmpT] = modVar(funct, antenna);
+            
+            plot(T(prevIndex:i-1),data(prevIndex:i-1, :));
+            prevIndex = i-1;
+            break;
+            
+            %plots the scanning beam
+        case 5
+            plot(T(prevIndex:i-1),data(prevIndex:i-1, :));
+            prevIndex = i-1;
+            break;
+    end
+    
+    if data(i,1) ~= data(i+1,1)
+        d = d + 1;
+    end
+end
+
+plot(V*V(1,:));
+end
+
