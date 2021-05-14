@@ -13,7 +13,6 @@ functEnd = 25;
 %https://www.mathworks.com/matlabcentral/answers/181168-how-to-convert-integer-array-to-one-value
 
 %function is in the preamble at 19-25
-
 functArray = signal(functStart:functEnd, 2);
 validateattributes(functArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
 funct = polyval(bpsk, 10);
@@ -21,11 +20,15 @@ funct = polyval(bpsk, 10);
 %antenna is bits 5,6, and 7 when SBStart (4) is high and AntSelRd was high
 %in the beginning
 
+%finds the last antenna bit
 antBit = find(signal(:,8)==1, 1,'last');
+%makes sure it is the second to last one since it goes high for a sec at
+%the end
 if antBit == length(signal)
     signal = signal(0:length(signal)-1);
     antBit = find(signal(:,8)==1, 1,'last');
 end
+
 antArray = [];
 antArray.append(signal(antBit, 5));
 antArray.append(signal(antBit, 6));
