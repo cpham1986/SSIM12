@@ -9,13 +9,16 @@ function genSin(data)
 % 4/19/21
 prevIndex = 1;
 
+% num is the specific number of differences needed to find a signal
+num = 5;
 for i = 1:length(testArr)
     %code for 1 signal
-    if mod(d, 5) == 0
+    if mod(d, num) == 0
         index = i-1;
         %should grab all columns
         data2 = data(prevIndex:index, :);
         time = (prevIndex:index)*(10^-6);
+        
         plotOutput(time, data2);
         prevIndex = index;
         
@@ -44,7 +47,6 @@ end
 %v(t) = AmpT * ((sin(pi*((thetaT-thetaR)/(1.15*thetaBW))))./(pi*((thetaT-thetaR)/(1.15*thetaBW)))).*sin(omega*T+phaseShift);
 
 %mod theta T accordingly
-t = [];
 % thetaT = time/ + thetaMax;
 % x = ((thetaT-thetaR)/(1.15*thetaBW))./(pi*((thetaT-thetaR)/(1.15*thetaBW)));
 % v = AmpT * sinc(x).*sin(omega*T+phaseShift);

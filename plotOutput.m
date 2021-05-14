@@ -9,7 +9,7 @@ function plotOutput(T, data)
 % and this with the part related to scanning beam
 scanBit = find(data(:,4));
 data1 = bpskdpsk(data(1:scanBit,2));
-plot(T(1:scanBit),data1);
+plot(T(1:scanBit),sin(omega*T(1:scanBit)+pi*data1));
 
 T = data(scanBit:end);
 data = data(scanBit:end);

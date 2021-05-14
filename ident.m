@@ -7,6 +7,7 @@ function [funct, antenna] = ident(signal)
 %IDENT Summary of this function goes here
 %   Detailed explanation goes here
 
+%find out how to find the start of the preamble
 functStart = 19;
 functEnd = 25;
 
