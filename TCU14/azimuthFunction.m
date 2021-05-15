@@ -3,7 +3,8 @@ function azimuthMatrix = azimuthFunction(stationConstant)
     
     if(stationConstant == 0)
         %Enables transmitter for the entirety of the Azimuth function
-        azimuthMatrix(1:15559,1) = 1; % Transmitter is on for the entire duration of the function
+        azimuthMatrix(1:8759,1) = 1; % Transmitter is on for the entire duration of the function
+        azimuthMatrix(9360:15687,1) = 1; % Transmitter is on for the entire duration of the function
     
         % The following 4 lines transmits the Preamble function by using 
         %the BPSK line as the data line for the Preamble bits. For all 

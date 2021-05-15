@@ -3,7 +3,8 @@ function elevationMatrix = elevationFunction(stationConstant)
 
     if(stationConstant == 2)
         %Enables transmitter for the entirety of the Elevation function
-        elevationMatrix(1:5356,1) = 1; % Transmitter is on for the entire duration of the function
+        elevationMatrix(1:3405,1) = 1; % Transmitter is on for the entire duration of the function
+        elevationMatrix(3806:5355,1) = 1; % Transmitter is on for the entire duration of the function
     
         % The following 4 lines transmits the Preamble function by using 
         %the BPSK line as the data line for the Preamble bits. For all 

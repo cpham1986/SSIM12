@@ -3,7 +3,8 @@ function backAzimuthMatrix = backAzimuthFunction(stationConstant)
     
     if(stationConstant == 1)
         %Enables transmitter for the entirety of the Back Azimuth function
-        backAzimuthMatrix(1:11687,1) = 1; % Transmitter is on for the entire duration of the function
+        backAzimuthMatrix(1:6759,1) = 1; % Transmitter is on for the entire duration of the function
+        backAzimuthMatrix(7360:11687,1) = 1; % Transmitter is on for the entire duration of the function
     
         % The following 4 lines transmits the Preamble function by using 
         %the BPSK line as the data line for the Preamble bits. For all 
@@ -14,7 +15,9 @@ function backAzimuthMatrix = backAzimuthFunction(stationConstant)
         backAzimuthMatrix(1152:1215,2) = 1; % Transmit 1 for bit I6 of PREAMBLE
         backAzimuthMatrix(1344:1407,2) = 1; % Transmit 1 for bit I9 of PREAMBLE
         backAzimuthMatrix(1536:1599,2) = 1; % Transmit 1 for bit I12 of PREAMBLE
-    
+        
+        111111111111111111111110000000000000000000000011111111111111111111111111100000000000000000000000001111111111111111111
+        
         %These next 3 lines set the scan direction (TO and FRO), and manage
         %the transmitter disable for the pause time between scan direction
         %switching
