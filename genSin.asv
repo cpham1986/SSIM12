@@ -8,8 +8,9 @@ function genSin(data)
 % Team 12
 % 4/19/21
 prevIndex = 1;
-prevScanSignal = 0;
 
+% num is the specific number of differences needed to find a signal
+num = 5;
 for i = 1:length(testArr)
     %code for 1 signal
     if data(i,1) == 1
@@ -18,13 +19,8 @@ for i = 1:length(testArr)
         data2 = data(prevIndex:index, :);
         time = (prevIndex:index)*(10^-6);
         
-        data = data(index:end,:);
-        find(data, 0);
-        
-        
         plotOutput(time, data2);
         prevIndex = index;
-    end
 end
 
 if(index < testArr)

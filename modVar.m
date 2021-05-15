@@ -1,7 +1,7 @@
 % function: creates variables for the sinc function
 % input: function ID and antenna
 % output: several different thetas and A(t)
-function [thetaR, thetaBW, thetaMIN, thetaMAX, A] = modVar(ID, ANT)
+function [thetaR, thetaBW, thetaMIN, thetaMAX] = modVar(ID)
 %MODFUNC Summary of this function goes here
 %   Detailed explanation goes here
 % Find out their function ID and replace for a case function
@@ -36,7 +36,9 @@ switch ID
     case AD2
         ID = AZ;
     case AD3
-        ID = AZ;        
+        ID = AZ;  
+    otherwise
+        ID = -1;
     
 switch ID
     case AZ
@@ -54,27 +56,11 @@ switch ID
         thetaBW = 1.5;
         thetaMIN = -42;
         thetaMAX = 42; 
-end
-
-if(ID ~= EL)
-   switch ANT 
-       case 000
-           A = 1;
-       case 001
-           A = 0.5;
-       case 010
-           A = 0.25;
-       case 011
-           A = 0.125;
-       case 100
-           A = -1; %supposed to be unused
-       case 101
-           A = 10;
-       case 110
-           A = 0;
-       case 111
-           A = 0;
-   end
+    otherwise 
+        thetaR = 0;
+        thetaBW = 0;
+        thetaMIN = 0;
+        thetaMAX = 0; 
 end
 
 end
