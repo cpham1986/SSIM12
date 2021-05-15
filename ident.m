@@ -20,24 +20,25 @@ functArray(6) = signal(1500,2);
 functArray(7) = signal(1570,2);
 
 validateattributes(functArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
-funct = polyval(bpsk, 10);
+funct = polyval(functArray, 10);
+funct = bpskdpsk(funct);
 
-%finds the last antenna bit
-antBit = find(signal(:,8)==1, 1,'last');
-%makes sure it is the second to last one since it goes high for a sec at
-%the end
-if antBit == length(signal)
-    signal = signal(0:length(signal)-1);
-    antBit = find(signal(:,8)==1, 1,'last');
-end
-
-antArray = [0 0 0];
-antArray(1) = signal(antBit, 5);
-antArray(2) = signal(antBit, 6);
-antArray(3) = signal(antBit, 7);
-validateattributes(antArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
-antenna = polyval(antArray, 10) 
-  
+% %finds the last antenna bit
+% antBit = find(signal(:,8)==1, 1,'last');
+% %makes sure it is the second to last one since it goes high for a sec at
+% %the end
+% if antBit == length(signal)
+%     signal = signal(0:length(signal)-1);
+%     antBit = find(signal(:,8)==1, 1,'last');
+% end
+% 
+% antArray = [0 0 0];
+% antArray(1) = signal(antBit, 5);
+% antArray(2) = signal(antBit, 6);
+% antArray(3) = signal(antBit, 7);
+% validateattributes(antArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
+% antenna = polyval(antArray, 10) 
+%   
 %turns an array into an integer
 % bpsk(funct1:funct2);
 % validateattributes(bpsk, {'numeric'}, {'integer', 'nonnegative', '<', 10});

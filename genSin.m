@@ -21,7 +21,6 @@ for i = 1:length(testArr)
         data = data(index:end,:);
         find(data, 0);
         
-        
         plotOutput(time, data2);
         prevIndex = index;
     end

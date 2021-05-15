@@ -1,3 +1,4 @@
+
 % function: converts an array from BPSK to DPSK
 % input: bpsk - array of BPSK data from TCU
 % output: dpsk - converted BPSK array to DPSK
@@ -15,5 +16,6 @@ for i = 1:length(bpsk)
     end
     prevVal = dpsk(i); % holds value of previous bit
 end
+
 end
 
