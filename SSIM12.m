@@ -81,11 +81,13 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
     
     if TX_enable == 1
         
+        %marks start of preamble
+        if preambleIndex ~= -1
+            preambleIndex = i;
+        end
+        
         if SBS == 1 && prevSBS == 0
-            
-            
-            
-            
+                   
             while TX_enable ~= 0
                 TX_enable = a(i, 1);
                 TO_FRO = a(i, 3);
@@ -97,17 +99,14 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
         else
             
             outArray(i) = A * sin(i * omega + DPSKitr * pi);
-            if A == 1 % if a preamble is currently being outpted, need to cature the function ID
+            if A == 1 && mod(preambleItr,64) == preambleIndex % if a preamble is currently being outpted, need to cature the function ID
                 preamble(preambleItr) = DPSKitr;
-                preambleItr = preambleItr + 1;
+                
             end
-            
-            % if a data word is currently being outputed, 
+            preambleItr = preambleItr + 1;
+     
         end
-        
-        
-        
-        
+                
         
     else
         outArray(i) = 0;
@@ -119,7 +118,7 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
     % if the complete function ID is conveyed reset preamble iterator
     if preambleItr == 25
         preambleItr = 0;
-        preambelIndex = 0;
+        preambelIndex = -1;
     end
     
     

@@ -35,7 +35,12 @@ a = [1, 1, 0, 1, 1, 0, 1, 1; 1, 0, 1, 0, 0, 0, 1, 0];
 
 outArray = zeros(length(a(:, 1)), 1);
 
+omega = 156000;
+
 prevSBS = 0;
+
+preamble = zeros(1, 25);
+preambleItr = 0;
 
 BPSK = a(:, 2);
 DPSK = bpskdpsk(BPSK);
@@ -74,14 +79,12 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
     
     
     
-    if TX_enable == 0
+    if TX_enable == 1
         
-        
-        
-        
-        
-        
-        
+        %marks start of preamble
+        if preambleIndex ~= -1
+            preambleIndex = i;
+        end
         
         if SBS == 1 && prevSBS == 0
             
@@ -92,11 +95,22 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
                 TX_enable = a(i, 1);
                 TO_FRO = a(i, 3);
                 
+                % output scanning beacon
+                
                 i = i + 1;
             end
+        else
             
+            outArray(i) = A * sin(i * omega + DPSKitr * pi);
+            if A == 1 && preambl% if a preamble is currently being outpted, need to cature the function ID
+                preamble(preambleItr) = DPSKitr;
+                preambleItr = preambleItr + 1;
+            end
             
+            % if a data word is currently being outputed, 
         end
+        
+        
         
         
         
@@ -107,6 +121,11 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
     
     prevSBS = SBS;
     
+    % if the complete function ID is conveyed reset preamble iterator
+    if preambleItr == 25
+        preambleItr = 0;
+        preambelIndex = 0;
+    end
     
     
 end
