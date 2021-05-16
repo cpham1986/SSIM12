@@ -7,12 +7,14 @@ dpsk = zeros(1,length(bpsk)); % allocates memory for the new array
 prevVal = 0; % holds value of previous bit
 
 % iterates through the entire array
-for i = 1:64:length(bpsk)
-    if bpsk(i) == 1
-        dpsk(i:i+63) = ~(prevVal); % shifts value 180 degrees
-    else
-        dpsk(i:i+63) = prevVal; % retains value of previous bit
+for i = 1:length(bpsk)
+    if mod(i,64)==0
+        if bpsk(i) == 1
+            dpsk(i:i+63) = ~(prevVal); % shifts value 180 degrees
+        else
+            dpsk(i:i+63) = prevVal; % retains value of previous bit
+        end
+        prevVal = dpsk(i); % holds value of previous bit
     end
-    prevVal = dpsk(i); % holds value of previous bit
 end
 end
