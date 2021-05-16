@@ -32,16 +32,7 @@
 % antArray(3) = signal(antBit, 7);
 % validateattributes(antArray, {'numeric'}, {'integer', 'nonnegative', '<', 10});
 % antenna = polyval(antArray, 10)
-
-outArray = zeros(length(a(:, 1)), 1);
-
-preamble = zeros(1, 25);
-preambleItr = 1;
-preambleIndex = -1;
-
-BPSK = a(:, 2);
-DPSK = bpskdpsk(BPSK);
-
+outArray = zeros(lengt
 for i = 1: length(a)
     
     TX_enable = a(i, 1);
