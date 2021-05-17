@@ -22,7 +22,7 @@ thetaMIN = 0;
 thetMax = 0;
 functionID = zeros(7, 1);
 
-omega = 1000;
+omega = 156250;
 
 prevSBS = 0;
 
@@ -35,9 +35,9 @@ scanning = false;
 y = 0;
 
 BPSK = a(:, 2);
-% DPSK = bpskdpsk(BPSK);
-DPSK = BPSK;
-for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
+DPSK = bpskdpsk64(BPSK);
+%DPSK = BPSK;
+for i = 1: 100000  % file hasn't ended yet (400,000+ iterations)
     TX_enable = a(i, 1);
     DPSKitr = DPSK(i);
     TO_FRO = a(i, 3);
@@ -52,15 +52,19 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
         
         switch ANT
             case '0  0  0'
-                A = 1;
+                %A = 1;
+                A = 0;
             case '0  0  1'
-                A = 0.5;
+                %A = 0.5;
+                A = 0;
             case '0  1  0'
-                A = 0.25;
+                %A = 0.25;
+                A = 0;
             case '0  1  1'
-                A = 0.125;
+                %A = 0.125;
+                A = 0;
             case '1  0  0'
-                A = -1; %supposed to be unused
+                A = -1 %supposed to be unused
             case '1  0  1'
                 A = 10;
             case '1  1  0'
@@ -129,7 +133,7 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
             
             outArray(i) = A * sin(i * omega + DPSKitr * pi);
             if A == 1 && mod(i,64) == mod(preambleIndex,64) % if a preamble is currently being outpted, need to cature the function ID
-                preamble(preambleItr) = DPSKitr
+                preamble(preambleItr) = DPSKitr;
                 preambleItr = preambleItr + 1;
                 
             end
@@ -153,5 +157,7 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
     
 end
     
-
+figure(1)
 plot(1:length(outArray), outArray)
+figure(2)
+plot(1.09 * 10^4:1.2 * 10^4, outArray(1.09 * 10^4:1.2 * 10^4))
