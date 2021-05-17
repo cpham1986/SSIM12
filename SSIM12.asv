@@ -12,9 +12,6 @@ EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
 
 
 %a = [1, 1, 0, 1, 1, 0, 1, 1; 1, 0, 1, 0, 0, 0, 1, 0];
-
-
-% Preliminary go through to get functionIDs
 a = totalMatrix;
 BPSK = a(:, 2);
 DPSK = bpskdpsk64(BPSK);
