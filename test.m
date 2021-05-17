@@ -100,7 +100,7 @@
 % 
 in1 = [0,1,0,1];
 in2 = cat(1,zeros(64,1),ones(64,1),zeros(64,1),ones(64,1));
-out1 = bpskdpsk64(out);
+out1 = bpskdpsk64(in2);
 out2 = [];
 for i = 1:length(out1)
     if mod(i,64)==0
