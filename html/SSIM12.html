@@ -1,0 +1,462 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SSIM12</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-18"><meta name="DC.source" content="SSIM12.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">AZ  = <span class="string">'0  0  1  0  0  0  1'</span>; <span class="comment">% BPSK - 0011001</span>
+BAZ = <span class="string">'1  1  1  0  0  0  1'</span>; <span class="comment">% BPSK - 1001001</span>
+EL  = <span class="string">'1  0  0  0  0  0  1'</span>; <span class="comment">% BPSK - 1100001</span>
+
+
+
+
+<span class="comment">%a = [1, 1, 0, 1, 1, 0, 1, 1; 1, 0, 1, 0, 0, 0, 1, 0];</span>
+
+
+<span class="comment">% Preliminary go through to get functionIDs</span>
+a = totalMatrix;
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
+
+TX_enable_prev = 0;
+FID_flag = 0;
+FunctionIDs = zeros(50 , 25);
+FID_count = 1;
+FID_bit = 1;
+SBS_prev = 0;
+
+<span class="comment">% for i = 1:64:length(a)</span>
+<span class="comment">%     TX_enable = a(i, 1);</span>
+<span class="comment">%     DPSKitr = DPSK(i);</span>
+<span class="comment">%     SBS = a(i, 4);</span>
+<span class="comment">%</span>
+<span class="comment">%     %start of the preamble; assumes we are on the leading edge of a</span>
+<span class="comment">%     %Transmit enable but not the leading edge of Scan Beam Start</span>
+<span class="comment">%     if (TX_enable_prev == 0 &amp;&amp; TX_enable == 1) &amp;&amp;  ~(SBS == 1 &amp;&amp; SBSprev == 0)</span>
+<span class="comment">%         FID_flag = 1;</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     %</span>
+<span class="comment">%     if (FID_flag == 1 &amp;&amp; FID_bit &lt;= 25)  % We hit leading edge of TX_enable</span>
+<span class="comment">%         FunctionIDs(FID_count, FID_bit) = DPSKitr;</span>
+<span class="comment">%         FID_bit = FID_bit + 1;</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">%     if FID_bit &gt; 25</span>
+<span class="comment">%         FID_flag = 0;</span>
+<span class="comment">%         functionID = num2str(FunctionIDs(FID_count,19:end));</span>
+<span class="comment">%         if strcmp(num2str(functionID), AZ) || strcmp(num2str(functionID), EL) || strcmp(num2str(functionID), BAZ)</span>
+<span class="comment">%             FID_count = FID_count + 1; % writes the most recent functionID.</span>
+<span class="comment">%         else</span>
+<span class="comment">%             FunctionIDs(FID_count,:) = zeros(1,25);</span>
+<span class="comment">%         end</span>
+<span class="comment">%         FID_bit = 1;</span>
+<span class="comment">%     end</span>
+<span class="comment">%</span>
+<span class="comment">% %     if SBS == 1 &amp;&amp; SBSprev == 0 &amp;&amp; ~(TX_enable_prev == 0 &amp;&amp; TX_enable == 1)</span>
+<span class="comment">% %         FID_count = FID_count + 1; % writes the most recent functionID.</span>
+<span class="comment">% %             FID_bit = 1;</span>
+<span class="comment">% %     end</span>
+<span class="comment">%     TX_enable_prev = TX_enable;</span>
+<span class="comment">%     SBSprev = SBS;</span>
+<span class="comment">% end</span>
+
+<span class="comment">%for the actual amount of IDs</span>
+FID_count = FID_count-1;
+
+outArray = zeros(length(a(:, 1)), 1);
+
+thetaR = 0;
+thetaBW = 0;
+thetaMIN = 0;
+thetaMax = 0;
+FID_itr = 1;
+
+omega = 156250;
+
+prevSBS = 0;
+
+y = 0;
+
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
+<span class="comment">%DPSK = BPSK;</span>
+<span class="keyword">for</span> i = 1: length(a(:,1))  <span class="comment">% file hasn't ended yet (400,000+ iterations)</span>
+    TX_enable = a(i, 1);
+    DPSKitr = DPSK(i);
+    TO_FRO = a(i, 3);
+    SBS = a(i, 4);
+    ANT_pos = a(i, 5:7);
+    ANTread = a(i, 8);
+
+    <span class="keyword">if</span> ANTread == 1
+        ANT = num2str(ANT_pos);
+        <span class="comment">% Only check if antenna read is enabl</span>
+
+        <span class="keyword">switch</span> ANT
+            <span class="keyword">case</span> <span class="string">'0  0  0'</span>
+                A = 1;
+            <span class="keyword">case</span> <span class="string">'0  0  1'</span>
+                A = 0.5;
+            <span class="keyword">case</span> <span class="string">'0  1  0'</span>
+                A = 0.25;
+            <span class="keyword">case</span> <span class="string">'0  1  1'</span>
+                A = 0.125;
+            <span class="keyword">case</span> <span class="string">'1  0  0'</span>
+                A = -1 <span class="comment">%supposed to be unused</span>
+            <span class="keyword">case</span> <span class="string">'1  0  1'</span>
+                A = 10;
+            <span class="keyword">case</span> <span class="string">'1  1  0'</span>
+                A = 0;
+            <span class="keyword">case</span> <span class="string">'1  1  1'</span>
+                A = 0;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+
+
+    <span class="keyword">if</span> TX_enable == 1
+
+        <span class="keyword">if</span> SBS == 1 &amp;&amp; prevSBS == 0
+
+            <span class="comment">% Check funciton ID. Change angles based on function ID.</span>
+<span class="comment">%             if(FID_itr &lt;= 50)</span>
+<span class="comment">%                 functionID = FunctionIDs(FID_itr, 19:end);</span>
+<span class="comment">%                 FID_itr = FID_itr + 1;</span>
+<span class="comment">%             end</span>
+            <span class="keyword">switch</span>(stationNumber)
+                <span class="keyword">case</span> 0
+                    functionID = AZ;
+                <span class="keyword">case</span> 1
+                    functionID = BAZ;
+                <span class="keyword">case</span> 2
+                    functionID = EL;
+            <span class="keyword">end</span>
+
+            <span class="keyword">if</span> strcmp(num2str(functionID), AZ)
+                thetaR = -5;
+                thetaBW = 2;
+                thetaMIN = -62;
+                thetaMAX = 62;
+
+            <span class="keyword">elseif</span> strcmp(num2str(functionID), BAZ)
+                thetaR = -5;
+                thetaBW = 2;
+                thetaMIN = -42;
+                thetaMAX = 42;
+            <span class="keyword">elseif</span> strcmp(num2str(functionID), EL)
+                thetaR = 3;
+                thetaBW = 1.5;
+                thetaMIN = -2;
+                thetaMAX = 30;
+            <span class="keyword">else</span>
+                thetaR = 0;
+                thetaBW = 0;
+                thetaMIN = 0;
+                thetaMax = 0;
+            <span class="keyword">end</span>
+            scanStart = i;
+            <span class="keyword">while</span> TX_enable ~= 0
+                TX_enable = a(i, 1);
+                TO_FRO = a(i, 3);
+                SBS = a(i, 4);
+
+                <span class="keyword">if</span> TO_FRO == 1 <span class="comment">% Scanning TO thetaMIN + t/50</span>
+                    thetaT = thetaMIN + (i-scanStart)/50;
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> TO_FRO == 0 <span class="comment">% Scanning FRO thetaMIN - t/50</span>
+                    thetaT = thetaMIN - (i-scanStart)/50;
+
+                <span class="keyword">end</span>
+
+                outArray(i) = A * (sin(pi*(thetaT - thetaR)/(1.15*thetaBW)) / (pi * (thetaT - thetaR) / (1.15 * thetaBW)) * sin(omega * i));
+                i = i + 1;
+            <span class="keyword">end</span>
+            i = i - 1;
+        <span class="keyword">else</span>
+
+            outArray(i) = A * sin(i * omega + DPSKitr * pi);
+        <span class="keyword">end</span>
+
+
+    <span class="keyword">else</span>
+        outArray(i) = 0;
+
+    <span class="keyword">end</span>
+
+    prevSBS = SBS;
+<span class="keyword">end</span>
+
+figure(1)
+plot(1:length(outArray), outArray)
+xlabel(<span class="string">'time'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+title(<span class="string">'TCU out'</span>);
+figure(2)
+plot(1.09 * 10^4:1.2 * 10^4, outArray(1.09 * 10^4:1.2 * 10^4))
+</pre><img vspace="5" hspace="5" src="SSIM12_01.png" alt=""> <img vspace="5" hspace="5" src="SSIM12_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+
+
+
+
+
+AZ  = '0  0  1  0  0  0  1'; % BPSK - 0011001
+BAZ = '1  1  1  0  0  0  1'; % BPSK - 1001001
+EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
+
+
+
+
+%a = [1, 1, 0, 1, 1, 0, 1, 1; 1, 0, 1, 0, 0, 0, 1, 0];
+
+
+% Preliminary go through to get functionIDs
+a = totalMatrix;
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
+
+TX_enable_prev = 0;
+FID_flag = 0;
+FunctionIDs = zeros(50 , 25);
+FID_count = 1;
+FID_bit = 1;
+SBS_prev = 0;
+
+% for i = 1:64:length(a)
+%     TX_enable = a(i, 1);
+%     DPSKitr = DPSK(i);
+%     SBS = a(i, 4);
+%     
+%     %start of the preamble; assumes we are on the leading edge of a
+%     %Transmit enable but not the leading edge of Scan Beam Start
+%     if (TX_enable_prev == 0 && TX_enable == 1) &&  ~(SBS == 1 && SBSprev == 0)
+%         FID_flag = 1;
+%     end
+%     
+%     %
+%     if (FID_flag == 1 && FID_bit <= 25)  % We hit leading edge of TX_enable
+%         FunctionIDs(FID_count, FID_bit) = DPSKitr;
+%         FID_bit = FID_bit + 1;
+%     end
+%     
+%     if FID_bit > 25
+%         FID_flag = 0;
+%         functionID = num2str(FunctionIDs(FID_count,19:end));
+%         if strcmp(num2str(functionID), AZ) || strcmp(num2str(functionID), EL) || strcmp(num2str(functionID), BAZ)
+%             FID_count = FID_count + 1; % writes the most recent functionID.
+%         else
+%             FunctionIDs(FID_count,:) = zeros(1,25);
+%         end
+%         FID_bit = 1;
+%     end
+%     
+% %     if SBS == 1 && SBSprev == 0 && ~(TX_enable_prev == 0 && TX_enable == 1)
+% %         FID_count = FID_count + 1; % writes the most recent functionID.
+% %             FID_bit = 1;
+% %     end
+%     TX_enable_prev = TX_enable;
+%     SBSprev = SBS;
+% end
+
+%for the actual amount of IDs
+FID_count = FID_count-1;
+
+outArray = zeros(length(a(:, 1)), 1);
+
+thetaR = 0;
+thetaBW = 0;
+thetaMIN = 0;
+thetaMax = 0;
+FID_itr = 1;
+
+omega = 156250;
+
+prevSBS = 0;
+
+y = 0;
+
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
+%DPSK = BPSK;
+for i = 1: length(a(:,1))  % file hasn't ended yet (400,000+ iterations)
+    TX_enable = a(i, 1);
+    DPSKitr = DPSK(i);
+    TO_FRO = a(i, 3);
+    SBS = a(i, 4);
+    ANT_pos = a(i, 5:7);
+    ANTread = a(i, 8);
+    
+    if ANTread == 1
+        ANT = num2str(ANT_pos);
+        % Only check if antenna read is enabl
+        
+        switch ANT
+            case '0  0  0'
+                A = 1;
+            case '0  0  1'
+                A = 0.5;
+            case '0  1  0'
+                A = 0.25;
+            case '0  1  1'
+                A = 0.125;
+            case '1  0  0'
+                A = -1 %supposed to be unused
+            case '1  0  1'
+                A = 10;
+            case '1  1  0'
+                A = 0;
+            case '1  1  1'
+                A = 0;
+        end
+    end
+    
+    
+    
+    if TX_enable == 1
+                
+        if SBS == 1 && prevSBS == 0
+            
+            % Check funciton ID. Change angles based on function ID.
+%             if(FID_itr <= 50)
+%                 functionID = FunctionIDs(FID_itr, 19:end);
+%                 FID_itr = FID_itr + 1;
+%             end
+            switch(stationNumber)
+                case 0
+                    functionID = AZ;
+                case 1 
+                    functionID = BAZ;
+                case 2
+                    functionID = EL;
+            end
+
+            if strcmp(num2str(functionID), AZ)
+                thetaR = -5;
+                thetaBW = 2;
+                thetaMIN = -62;
+                thetaMAX = 62;
+               
+            elseif strcmp(num2str(functionID), BAZ)
+                thetaR = -5;
+                thetaBW = 2;
+                thetaMIN = -42;
+                thetaMAX = 42;
+            elseif strcmp(num2str(functionID), EL)
+                thetaR = 3;
+                thetaBW = 1.5;
+                thetaMIN = -2;
+                thetaMAX = 30;
+            else
+                thetaR = 0;
+                thetaBW = 0;
+                thetaMIN = 0;
+                thetaMax = 0;
+            end
+            scanStart = i;    
+            while TX_enable ~= 0
+                TX_enable = a(i, 1);
+                TO_FRO = a(i, 3);
+                SBS = a(i, 4);
+                
+                if TO_FRO == 1 % Scanning TO thetaMIN + t/50
+                    thetaT = thetaMIN + (i-scanStart)/50;
+                end
+                if TO_FRO == 0 % Scanning FRO thetaMIN - t/50
+                    thetaT = thetaMIN - (i-scanStart)/50;
+                    
+                end
+                
+                outArray(i) = A * (sin(pi*(thetaT - thetaR)/(1.15*thetaBW)) / (pi * (thetaT - thetaR) / (1.15 * thetaBW)) * sin(omega * i));
+                i = i + 1;
+            end
+            i = i - 1;
+        else
+            
+            outArray(i) = A * sin(i * omega + DPSKitr * pi);
+        end
+                
+        
+    else
+        outArray(i) = 0;
+        
+    end
+    
+    prevSBS = SBS;    
+end
+    
+figure(1)
+plot(1:length(outArray), outArray)
+xlabel('time');
+ylabel('Amplitude');
+title('TCU out');
+figure(2)
+plot(1.09 * 10^4:1.2 * 10^4, outArray(1.09 * 10^4:1.2 * 10^4))
+
+##### SOURCE END #####
+--></body></html>
