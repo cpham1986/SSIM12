@@ -1,3 +1,6 @@
+function SSIM(totalMatrix)
+%SSIM Summary of this function goes here
+%   Detailed explanation goes here
 
 
 
@@ -7,9 +10,6 @@
 AZ  = '0  0  1  0  0  0  1'; % BPSK - 0011001
 BAZ = '1  1  1  0  0  0  1'; % BPSK - 1001001
 EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
-
-%a = [1, 1, 0, 1, 1, 0, 1, 1; 1, 0, 1, 0, 0, 0, 1, 0];
-
 
 % Preliminary go through to get functionIDs
 a = totalMatrix;
@@ -17,10 +17,6 @@ a = totalMatrix;
 bAZ = '0  0  1  1  0  0  1';
 bBAZ = '1  0  0  1  0  0  1';
 bEL = '1  1  0  0  0  0  1';
-
-AZ  = '0  0  1  0  0  0  1'; % BPSK - 0011001
-BAZ = '1  1  1  0  0  0  1'; % BPSK - 1001001
-EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
 
 BPSK = a(:, 2);
 DPSK = BPSK;
@@ -33,8 +29,6 @@ FunctionIDs2 = zeros(50,1);
 FID_count = 1;
 FID_bit = 1;
 SBS_prev = 0;
-
-%logic to obtain array of function IDs (see 
 
 for i = 1:64:length(a)
     TX_enable = a(i, 1);
@@ -76,17 +70,14 @@ for i = 1:64:length(a)
     SBSprev = SBS;
 end
 
-%convert data in DPSK
 BPSK = a(:, 2);
 DPSK = bpskdpsk64(BPSK);
 
 %for the actual amount of IDs
 FID_count = FID_count-1;
 
-%initialize output array
 outArray = zeros(length(a(:, 1)), 1);
 
-%initialize values
 thetaR = 0;
 thetaBW = 0;
 thetaMIN = 0;
@@ -99,6 +90,9 @@ prevSBS = 0;
 
 y = 0;
 
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
+%DPSK = BPSK;
 
 arr = zeros(615000,1);
 scanning = 0;
@@ -223,3 +217,6 @@ plot(1:length(outArray), outArray)
 xlabel('time');
 ylabel('Amplitude');
 title('TCU out');
+
+end
+

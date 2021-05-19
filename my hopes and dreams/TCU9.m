@@ -5,7 +5,7 @@
 %to the AZ and BZ functions when needs and will output an array. The main
 %script will combine the sequence arrays into the array that will be
 %exported to the SSIM 
-
+close all
 clear;
 ClkCycle = 64;
 AZ = 0;
@@ -31,7 +31,7 @@ AntSelRd = 8;
 
 totalMatrix = main();
 
-SSIM(totalMatrix)
+SSIM(totalMatrix);
 
 
 %sequences
