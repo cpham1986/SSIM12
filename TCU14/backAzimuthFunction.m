@@ -1,6 +1,5 @@
 function backAzimuthMatrix = backAzimuthFunction(stationConstant)
     backAzimuthMatrix = zeros(11900, 8);
-    
     if(stationConstant == 1)
         %Enables transmitter for the entirety of the Back Azimuth function
         backAzimuthMatrix(1:6759,1) = 1; % Transmitter is on for the entire duration of the function

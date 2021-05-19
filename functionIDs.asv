@@ -14,7 +14,7 @@ DPSK = BPSK;
 TX_enable_prev = 0;
 FID_flag = 0;
 FunctionIDs = zeros(50 , 25);
-FunctionIDs2 = zeros(50,1);
+FunctionIDs2 = zeros(50 , 25);
 
 FID_count = 1;
 FID_bit = 1;
@@ -39,18 +39,13 @@ for i = 1:64:length(a)
 
     if FID_bit > 25
         FID_flag = 0;
-        functionID = num2str(FunctionIDs(FID_count,19:end));
-        if strcmp(functionID, bAZ) || strcmp(functionID, bEL) || strcmp(functionID, bBAZ)
-            
-            switch(num2str(functionID))
-                case bAZ
-                    FunctionIDs2(FID_count) = 0010001;
-                case bBAZ
-                    FunctionIDs2(FID_count) = 1110001;
-                case bEL
-                    FunctionIDs2(FID_count) = 1000001;
-            end
+        functionID = FunctionIDs(FID_count,19:end);
+        if strcmp(num2str(functionID), bAZ) || strcmp(num2str(functionID), bEL) || strcmp(num2str(functionID), bBAZ)
             FID_count = FID_count + 1; % writes the most recent functionID.
+            switch(num2str(functionID))
+                case AZ:
+                case 
+            end
         else
             FunctionIDs(FID_count,:) = zeros(1,25);
         end

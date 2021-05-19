@@ -16,17 +16,30 @@ EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
 
 % Preliminary go through to get functionIDs
 a = totalMatrix;
+
+bAZ = '0  0  1  1  0  0  1';
+bBAZ = '1  0  0  1  0  0  1';
+bEL = '1  1  0  0  0  0  1';
+
+AZ  = '0  0  1  0  0  0  1'; % BPSK - 0011001
+BAZ = '1  1  1  0  0  0  1'; % BPSK - 1001001
+EL  = '1  0  0  0  0  0  1'; % BPSK - 1100001
+
+
+
 BPSK = a(:, 2);
-DPSK = bpskdpsk64(BPSK);
+DPSK = BPSK;
 
 TX_enable_prev = 0;
 FID_flag = 0;
 FunctionIDs = zeros(50 , 25);
+FunctionIDs2 = zeros(50,1);
+
 FID_count = 1;
 FID_bit = 1;
 SBS_prev = 0;
 
-for i = 2:64:length(a)
+for i = 1:64:length(a)
     TX_enable = a(i, 1);
     DPSKitr = DPSK(i);
     SBS = a(i, 4);
@@ -46,7 +59,16 @@ for i = 2:64:length(a)
     if FID_bit > 25
         FID_flag = 0;
         functionID = num2str(FunctionIDs(FID_count,19:end));
-        if strcmp(num2str(functionID), AZ) || strcmp(num2str(functionID), EL) || strcmp(num2str(functionID), BAZ)
+        if strcmp(functionID, bAZ) || strcmp(functionID, bEL) || strcmp(functionID, bBAZ)
+            
+            switch(num2str(functionID))
+                case bAZ
+                    FunctionIDs2(FID_count) = 0010001;
+                case bBAZ
+                    FunctionIDs2(FID_count) = 1110001;
+                case bEL
+                    FunctionIDs2(FID_count) = 1000001;
+            end
             FID_count = FID_count + 1; % writes the most recent functionID.
         else
             FunctionIDs(FID_count,:) = zeros(1,25);
@@ -61,6 +83,9 @@ for i = 2:64:length(a)
     TX_enable_prev = TX_enable;
     SBSprev = SBS;
 end
+
+BPSK = a(:, 2);
+DPSK = bpskdpsk64(BPSK);
 
 %for the actual amount of IDs
 FID_count = FID_count-1;
@@ -128,10 +153,11 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
             scanning = 1;
             
             %Check funciton ID. Change angles based on function ID.
-            if(FID_itr <= 50 && TO_FRO == 1)
-                functionID = FunctionIDs(FID_itr, 19:end);
-                FID_itr = FID_itr + 1;
-            end
+%             if(FID_itr <= 50 && TO_FRO == 1)
+%                 functionID = FunctionIDs(FID_itr, 19:end);
+%                 FID_itr = FID_itr + 1;
+%             end
+            
 %             switch(stationNumber)
 %                 case 0
 %                     functionID = AZ;
@@ -140,19 +166,24 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
 %                 case 2
 %                     functionID = EL;
 %             end
-%             
-            if strcmp(num2str(functionID), AZ)
+            if(FID_itr <= 50 && TO_FRO == 1)
+                ID = FunctionIDs2(FID_itr);
+                FID_itr = FID_itr + 1;
+            end
+
+            if ID == 0010001
                 thetaR = -5;
                 thetaBW = 2;
                 thetaMIN = -62;
                 thetaMAX = 62;
                 
-            elseif strcmp(num2str(functionID), BAZ)
+            elseif ID == 1110001
                 thetaR = -5;
                 thetaBW = 2;
                 thetaMIN = -42;
                 thetaMAX = 42;
-            elseif strcmp(num2str(functionID), EL)
+                
+            elseif ID == 1000001
                 thetaR = 3;
                 thetaBW = 1.5;
                 thetaMIN = -2;
@@ -173,10 +204,10 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
             if TO_FRO == 1 % Scanning TO thetaMIN + t/50
                 thetaT = (thetaMIN + (i-scanStart)/50);
             end
-            if TO_FRO == 0 % Scanning FRO thetaMIN - t/50
+            if TO_FRO == 0 % Scanning FRO thetaMAX - t/50
                 thetaT = (thetaMAX - (i-scanStart)/50);
-                
-            end            
+            end
+            
 %             outArray(i) = A * (sin(pi*(thetaT - thetaR)/(1.15*thetaBW)) / (pi * (thetaT - thetaR) / (1.15 * thetaBW)) * sin(omega * i));
             outArray(i) = A * (sinc((thetaT - thetaR)/(1.15*thetaBW)) * sin(omega * i));
         else
