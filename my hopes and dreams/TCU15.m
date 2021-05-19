@@ -1,40 +1,59 @@
+% Designed by Joshua Slaughter Group 15 
+% CMPE349 Spring 2021
 clear
 close all
 clc
 
-Azimuth_Transmission = AZ();
-Elevation_Transmission = EL();
-Baz_Transmission = BAZ();
-BDW1 = DW1();
-BDW2 = DW2();
-BDW3 = DW3();
-BDW4 = DW4();
-BDW5 = DW5();
-BDW6 = DW6();
-AUX1 = ADW1();
-
-% writematrix(Azimuth_Transmission,'AZ_Trans_G15.txt')
-% writematrix(Elevation_Transmission,'EL_Trans_G15.txt')
-% writematrix(Baz_Transmission, 'BAZ_Trans_G15.txt')
-% writematrix(BDW1, 'BDW1_G15.txt')
-% writematrix(BDW2, 'BDW2_G15.txt')
-% writematrix(BDW3, 'BDW3_G15.txt')
-% writematrix(BDW4, 'BDW4_G15.txt')
-% writematrix(BDW5, 'BDW5_G15.txt')
-% writematrix(BDW6, 'BDW6_G15.txt')
-% writematrix(AUX1, 'AUX1_G15.txt')
 %% Entire Transmission
-totalMatrix = [Seq1();zeros(1000,8);Seq2();zeros(13000,8);Seq1();zeros(19000,8);Seq2();zeros(2000,8);Seq1();zeros(20000,8);Seq2();zeros(6000,8);Seq1();Seq2();zeros(20000,8)];
+totalMatrix = [Seq1(1);zeros(1000,8);Seq2(1);zeros(13000,8);Seq1(1);zeros(19000,8);Seq2(1);zeros(2000,8);Seq1(1);zeros(20000,8);Seq2(1);zeros(6000,8);Seq1(1);Seq2(1);zeros(20000,8)];
+AZ_Station = [Seq1(2);zeros(1000,8);Seq2(2);zeros(13000,8);Seq1(2);zeros(19000,8);Seq2(2);zeros(2000,8);Seq1(2);zeros(20000,8);Seq2(2);zeros(6000,8);Seq1(2);Seq2(2);zeros(20000,8)];
+EL_Station = [Seq1(3);zeros(1000,8);Seq2(3);zeros(13000,8);Seq1(3);zeros(19000,8);Seq2(3);zeros(2000,8);Seq1(3);zeros(20000,8);Seq2(3);zeros(6000,8);Seq1(3);Seq2(3);zeros(20000,8)];
+BAZ_Station = [Seq1(4);zeros(1000,8);Seq2(4);zeros(13000,8);Seq1(4);zeros(19000,8);Seq2(4);zeros(2000,8);Seq1(4);zeros(20000,8);Seq2(4);zeros(6000,8);Seq1(4);Seq2(4);zeros(20000,8)];
 SSIM(totalMatrix)
+SSIM(AZ_Station)
+SSIM(EL_Station)
+SSIM(BAZ_Station)
+
 %% Sequence 1
-function Sequence = Seq1()
+function Sequence = Seq1(num)
     % EL EL2 AZ EL2 EL (space) BAZ note EL EL2
-    Sequence = [EL();DW1();zeros(2200,8);AZ();DW2();zeros(2200,8);EL();DW3();BAZ();DW4();EL();DW5;zeros(2200,8)];
+    Seq = [EL();DW1();zeros(2200,8);AZ();DW2();zeros(2200,8);EL();DW3();BAZ();DW4();EL();DW5();zeros(2200,8)];
+    AZ_seq1 = [zeros(5600,8);DW1();zeros(2200,8);AZ();zeros(5300,8);zeros(5600,8);DW3();zeros(11900,8);DW4();zeros(5600,8);DW5();zeros(2200,8)];
+    EL_seq1 = [EL();zeros(5300,8);zeros(15900,8);zeros(5300,8);EL();zeros(3100,8);zeros(11900,8);zeros(3100,8);EL();zeros(5300, 8)];
+    BAZ_seq1 = [zeros(5600,8);zeros(5300,8);zeros(15900,8);DW2();zeros(2200,8);zeros(5600,8);zeros(3100,8);BAZ();zeros(3100,8);zeros(5600,8);zeros(5300,8)];
+    if num == 1
+        Sequence = Seq;
+    end
+    if num == 2
+        Sequence = AZ_seq1;
+    end
+    if num == 3
+        Sequence = EL_seq1;
+    end
+    if num == 4
+        Sequence = BAZ_seq1;
+    end
+    %length(Sequence)
 end
 %% Sequence 2
-function Sequence = Seq2()
+function Sequence = Seq2(num)
     % EL EL2 AZ EL2 EL GrowthNote(2) EL EL2
-    Sequence = [EL();DW6();zeros(2200,8);AZ();DW1();zeros(2200,8);EL();ADW1();zeros(12300,8);EL();DW5;zeros(2200,8)];
+    Seq = [EL();DW6();zeros(2200,8);AZ();DW5();zeros(2200,8);EL();ADW1();zeros(12300,8);EL();DW1();zeros(2200,8)];
+    AZ_seq2 = [zeros(5600,8);DW6();zeros(2200,8);AZ();DW5();zeros(2200,8);zeros(5600,8);ADW1();zeros(12300,8);zeros(5600,8);DW1();zeros(2200,8)];
+    EL_seq2 = [EL();zeros(5300,8);zeros(15900,8);zeros(5300,8);EL();zeros(5900,8);zeros(12300,8);EL();zeros(5300, 8)];
+    if num == 1
+        Sequence = Seq;
+    end
+    if num == 2
+        Sequence = AZ_seq2;
+    end
+    if num == 3
+        Sequence = EL_seq2;
+    end
+    if num == 4
+        Sequence = zeros(66800,8);
+    end
+    %length(Sequence)
 end
 %% Azimuth
 % This function sends an 8 bit word every microsecond (AZ)

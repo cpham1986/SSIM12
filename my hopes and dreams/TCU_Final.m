@@ -5,19 +5,12 @@
 %to the AZ and BZ functions when needs and will output an array. The main
 %script will combine the sequence arrays into the array that will be
 %exported to the SSIM 
-close all
+
 clear;
 ClkCycle = 64;
-AZ = 0;
-EL = 0;
-BAZ = 0;
-BD1 = 0;
-BD2 = 0;
-BD3 = 0;
-BD4 = 0;
-BD5 = 0;
-BD6 = 0;
-AD1 = 0;
+
+%1-3
+stationSelect = 1; 
 TxEn = 1;
 BPSK = 2;
 ToFro = 3;
@@ -29,33 +22,33 @@ AntSelRd = 8;
 
 %main code here
 
-totalMatrix = main();
+totalMatrix = main(stationSelect);
 
-SSIM(totalMatrix);
 
+SSIM(totalMatrix)
 
 %sequences
-function SSIM = main(~)
+function SSIM = main(stationSelect)
 %Starting on SEQ1 and alternating between there are 4 SEQ1 and 4 SEQ2
-MainCall1 = FunctionSEQ1();
+MainCall1 = FunctionSEQ1(stationSelect);
 pause1 = zeros(1000,8);
-MainCall2 = FunctionSEQ2();
+MainCall2 = FunctionSEQ2(stationSelect);
 pause2 = zeros(13000,8);
 
-MainCall3 = FunctionSEQ1();
+MainCall3 = FunctionSEQ1(stationSelect);
 pause3 = zeros(19000,8);
-MainCall4 = FunctionSEQ2();
+MainCall4 = FunctionSEQ2(stationSelect);
 pause4 = zeros(2000,8);
 
 
-MainCall5 = FunctionSEQ1();
+MainCall5 = FunctionSEQ1(stationSelect);
 pause5 = zeros(20000,8);
-MainCall6 = FunctionSEQ2();
+MainCall6 = FunctionSEQ2(stationSelect);
 pause6 = zeros(6000,8);
 
-MainCall7 = FunctionSEQ1();
+MainCall7 = FunctionSEQ1(stationSelect);
 %no pause
-MainCall8 = FunctionSEQ2();
+MainCall8 = FunctionSEQ2(stationSelect);
 pause7 = zeros(18000,8);
 
 SSIM = cat(1,MainCall1,pause1,MainCall2,pause2, MainCall3,pause3,MainCall4,pause4,MainCall5, pause5 ,MainCall6,pause6, MainCall7,pause7,MainCall8);
@@ -64,18 +57,18 @@ end
 
 
 %SEQ 1 calls EL, BDW, AZ, BDW, EL, BDW, BAZ, BDW2, EL, BDW. (10 calls ) 
-function SEQ1 = FunctionSEQ1(~)
-SEQCALL1 = FunctionEL();
+function SEQ1 = FunctionSEQ1(stationSelect)
+SEQCALL1 = FunctionEL(stationSelect);
 SEQCALL2 = FunctionBD1();
 SEQ1Pause1 = zeros(2200,8);
-SEQCALL3 = FunctionAZ();
+SEQCALL3 = FunctionAZ(stationSelect);
 SEQCALL4 = FunctionBD3();
 %add another pause1 
-SEQCALL5 = FunctionEL();
+SEQCALL5 = FunctionEL(stationSelect);
 SEQCALL6 = FunctionBD4();
-SEQCALL7 = FunctionBAZ();
+SEQCALL7 = FunctionBAZ(stationSelect);
 SEQCALL8 = FunctionBD2();
-SEQCALL9 = FunctionEL();
+SEQCALL9 = FunctionEL(stationSelect);
 SEQCALL10 = FunctionBD5();
 SEQ1Pause3 = zeros(2500,8);
 SEQ1 = cat(1,SEQCALL1,SEQCALL2,SEQ1Pause1,SEQCALL3,SEQCALL4, SEQ1Pause1,SEQCALL5,SEQCALL6,SEQCALL7,SEQCALL8,SEQCALL9,SEQCALL10,SEQ1Pause3);
@@ -85,17 +78,17 @@ end
 
 %SEQ2 calls EL, BDW, AZ, BDW, EL, ADW1 (Aux data word), EL, BDW. (8 calls) 
 
-function SEQ2 = FunctionSEQ2(~)
-SEQ2CALL1 = FunctionEL();
+function SEQ2 = FunctionSEQ2(stationSelect)
+SEQ2CALL1 = FunctionEL(stationSelect);
 SEQ2CALL2 = FunctionBD6();
 SEQ2Pause1 = zeros(2200,8);
-SEQ2CALL3 = FunctionAZ();
+SEQ2CALL3 = FunctionAZ(stationSelect);
 SEQ2CALL4 = FunctionBD1();
 %add SEQ2Pause1 here 
-SEQ2CALL5 = FunctionEL();
+SEQ2CALL5 = FunctionEL(stationSelect);
 SEQ2CALL6 = FunctionADA();
 SEQ2Pause2 = zeros(12300,8);
-SEQ2CALL7 = FunctionEL();
+SEQ2CALL7 = FunctionEL(stationSelect);
 SEQ2CALL8 = FunctionBD2();
 SEQ2Pause3 = zeros(2400,8);
 SEQ2 = cat(1,SEQ2CALL1,SEQ2CALL2,SEQ2Pause1,SEQ2CALL3,SEQ2CALL4,SEQ2Pause1,SEQ2CALL5,SEQ2CALL6,SEQ2Pause2,SEQ2CALL7,SEQ2CALL8,SEQ2Pause3);
@@ -108,7 +101,7 @@ end
 
 %these are the funcitons 
   %AZ stuff 
-  function AZDataArray = FunctionAZ(~)
+  function AZDataArray = FunctionAZ(stationSelect)
         TxEn = 1;
         BPSK = 2;
         ToFro = 3;
@@ -119,8 +112,7 @@ end
         AntSelRd = 8;
       AZDataArray(15900,8) = 0;
       
-      
-      
+      if (stationSelect == 0)
       for i = 1:831
       AZDataArray(i,BPSK) = 0;%carrier acquisition
       end 
@@ -228,11 +220,11 @@ end
         %at 15.688ms the end funciton starts and that means everything goes
         %to 0 ask if enable also goes 0 
         %AZDataArray(15688:15900,TxEn) = 0;
-        
+      end
   end 
         
      %BAZ stuff 
-   function BAZDataArray = FunctionBAZ(~)
+   function BAZDataArray = FunctionBAZ(stationSelect)
         TxEn = 1;
         BPSK = 2;
         ToFro = 3;
@@ -241,8 +233,9 @@ end
         AntSel2 = 6;
         AntSel3 = 7;
         AntSelRd = 8; 
-
-     BAZDataArray(11900,8) = 0;
+         BAZDataArray(11900,8) = 0;
+      if (stationSelect == 1)
+    
       for i = 1:831
       BAZDataArray(i,BPSK) = 0;%carrier acquisition
       end 
@@ -346,12 +339,12 @@ end
         %since the 101 fro the SB ends here in the antsel that means that
         %antselRead must go high for once clock cycles 
         BAZDataArray(11560:11624,AntSelRd) = 1;
-        
+      end
    end 
    
    
       %Elevation stuff 
-   function ELDataArray = FunctionEL(~)
+   function ELDataArray = FunctionEL(stationSelect)
         TxEn = 1;
         BPSK = 2;
         ToFro = 3;
@@ -360,9 +353,10 @@ end
         AntSel2 = 6;
         AntSel3 = 7;
         AntSelRd = 8;
-
-
       ELDataArray(5600,8) = 0;
+      
+      if (stationSelect == 2)
+
       for i = 1:831
       ELDataArray(i,BPSK) = 0;%carrier acquisition
       end 
@@ -428,7 +422,7 @@ end
       %end function since the SB stopps and goes to 0 then AntSelRd goes
       %high for one clock cycle
       ELDataArray(5356:5429,AntSelRd) = 1;
-      
+      end
    end
    
    

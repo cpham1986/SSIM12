@@ -81,7 +81,7 @@ FID_itr = 1;
 scanbeam = zeros(length(a(:,1)),1);
 preamble = zeros(length(a(:,1)),1);
 
-omega = 156250;
+omega = 156250/1000000;
 
 prevSBS = 0;
 
@@ -185,12 +185,12 @@ for i = 1: length(a)  %iterates through array
             outArray(i) = A * (sinc((thetaT - thetaR)/(1.15*thetaBW)) * sin(omega * i));
         else
             %sets output for preamble, data words, and OCI
-            outArray(i) = A * sin(i * omega + DPSKitr * pi);
+            outArray(i) = A * sin(i * 2*pi*omega + DPSKitr * pi);
         end
         
     else
         %transmitter off so don't output
-        outArray(i) = 0;
+         outArray(i) = 0;
         
     end
        
@@ -216,7 +216,7 @@ end
 
 x = 1/1000:length(outArray)/1000/615000:length(outArray)/1000;
 
-figure(1)
+figure()
 plot(x, outArray.*preamble,'b');
 hold on
 plot(x, outArray.*~preamble.*~scanbeam,'g');
@@ -226,9 +226,13 @@ legend('PREAMBLE/DATAWORDS','OCI','SCANNING BEAM');
 xlabel('time (ms)');
 ylabel('Amplitude');
 title('TCU out');
+xlim([1/1000 615]);
 
-figure(2)
+figure()
 plot(x, outArray);
+xlim([1/1000 615]);
+
+
 
 xlabel('Time(ms)');
 ylabel('Amplitude');
