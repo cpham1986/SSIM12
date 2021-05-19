@@ -116,7 +116,7 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
             case '1  1  1'
                 A = 0;
             otherwise
-                A = 0;
+                A = 0
         end
     end
     
@@ -174,11 +174,11 @@ for i = 1: length(a)  % file hasn't ended yet (400,000+ iterations)
                 thetaT = (thetaMIN + (i-scanStart)/50);
             end
             if TO_FRO == 0 % Scanning FRO thetaMIN - t/50
-                thetaT = (thetaMAX - (i-scanStart)/50);
+                thetaT = thetaMAX - (i-scanStart)/50;
                 
             end            
-%             outArray(i) = A * (sin(pi*(thetaT - thetaR)/(1.15*thetaBW)) / (pi * (thetaT - thetaR) / (1.15 * thetaBW)) * sin(omega * i));
-            outArray(i) = A * (sinc((thetaT - thetaR)/(1.15*thetaBW)) * sin(omega * i));
+            outArray(i) = A * (sin(pi*(thetaT - thetaR)/(1.15*thetaBW)) / (pi * (thetaT - thetaR) / (1.15 * thetaBW)) * sin(omega * i));
+            outArray(i
         else
             
             outArray(i) = A * sin(i * omega + DPSKitr * pi);
