@@ -27,7 +27,7 @@ FID_bit = 1;
 %logic to get function IDs (see state machine)
 for i = 1:64:length(a)
     TX_enable = a(i, 1);
-    DPSKitr = DPSK(i);
+    BPSKitr = DPSK(i);
     SBS = a(i, 4);
 
 %     start of the preamble; assumes we are on the leading edge of a
@@ -37,7 +37,7 @@ for i = 1:64:length(a)
     end
 
     if (FID_flag == 1 && FID_bit <= 25)  % We hit leading edge of TX_enable
-        FunctionIDs(FID_count, FID_bit) = DPSKitr;
+        FunctionIDs(FID_count, FID_bit) = BPSKitr;
         FID_bit = FID_bit + 1;
     end
 
@@ -200,7 +200,7 @@ for i = 1: length(a)  %iterates through array
     end
     
     if scanning == 1
-       scanbeam(i) = 1; 
+        scanbeam(i) = 1; 
     else
         scanbeam(i) = 0; 
     end
@@ -214,21 +214,23 @@ for i = 1: length(a)  %iterates through array
     prevSBS = SBS;
 end
 
+x = 1/1000:length(outArray)/1000/615000:length(outArray)/1000;
+
 figure(1)
-plot(1:length(outArray), outArray.*preamble,'b');
+plot(x, outArray.*preamble,'b');
 hold on
-plot(1:length(outArray), outArray.*~preamble.*~scanbeam,'g');
-plot(1:length(outArray), outArray.*scanbeam,'m');
+plot(x, outArray.*~preamble.*~scanbeam,'g');
+plot(x, outArray.*scanbeam,'m');
 
 legend('PREAMBLE/DATAWORDS','OCI','SCANNING BEAM');
-xlabel('time');
+xlabel('time (ms)');
 ylabel('Amplitude');
 title('TCU out');
 
 figure(2)
-plot(1:length(outArray), outArray);
+plot(x, outArray);
 
-xlabel('time');
+xlabel('Time(ms)');
 ylabel('Amplitude');
 title('TCU out');
 

@@ -2,7 +2,7 @@ close all
 clear
 
 
-stationNumber = 2; % 0 = Azimuth Station, 1 = Back Azimuth Station, 2 = Elevation Station
+stationNumber = 0; % 0 = Azimuth Station, 1 = Back Azimuth Station, 2 = Elevation Station
 totalMatrix = sequenceOneFunction(stationNumber);
 totalMatrix = cat(1, totalMatrix, zeros(1000, 8));
 totalMatrix = cat(1, totalMatrix, sequenceTwoFunction(stationNumber));
